@@ -7,7 +7,7 @@ StatefulShellBranch getAdminRoute() {
     routes: [
       GoRoute(
         path: Routes.administration,
-        name: 'admin',
+        name: 'company',
         pageBuilder: (context, state) => NoTransitionPage(
           key: state.pageKey,
           child: const AdminPage(),

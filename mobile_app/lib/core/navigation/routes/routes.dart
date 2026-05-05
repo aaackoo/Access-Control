@@ -7,7 +7,7 @@ class Routes {
   static const String accesses = '/accesses';
   static const String accounts = '/accounts';
   static const String userAccessKeys = '/access_keys';
-  static const String administration = '/admin';
+  static const String administration = '/company';
 
   // MARK: - App Bar routes
   static const String profile = '/profile';
