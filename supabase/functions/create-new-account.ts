@@ -52,9 +52,12 @@ serve(async (req) => {
       throw new Error('Missing required fields: email, company_id, or target_role')
     }
 
+    // Random initial password (256 bits). It is never returned; the user sets their own password via reset.
+    const password = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32))))
+
     const { data, error: createError } = await supabaseAdmin.auth.admin.createUser({
       email: email,
-      password: "abcdef", // TODO: For dev testing!
+      password: password,
       email_confirm: true,
       user_metadata: {
         company_id: company_id,
@@ -66,7 +69,7 @@ serve(async (req) => {
 
     // Return result to access control mobile app
     return new Response(
-      JSON.stringify({ message: 'User created successfully', user: data.user, tempPassword: "password" }),
+      JSON.stringify({ message: 'User created successfully', user: data.user }),
       { headers: { 'Content-Type': 'application/json' } }
     )
 
