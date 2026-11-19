@@ -412,6 +412,54 @@ abstract class AppLocalizations {
   /// **'If you believe this is an error, please contact your administrator.'**
   String get unlockingFailedReason;
 
+  /// No description provided for @unlockingFailedDeviceUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'Device is not responding'**
+  String get unlockingFailedDeviceUnreachable;
+
+  /// No description provided for @unlockingFailedDeviceUnreachableReason.
+  ///
+  /// In en, this message translates to:
+  /// **'The device could not be reached. Please check that it is powered on and connected.'**
+  String get unlockingFailedDeviceUnreachableReason;
+
+  /// No description provided for @noInternetConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection'**
+  String get noInternetConnection;
+
+  /// No description provided for @noInternetConnectionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your internet connection and try again.'**
+  String get noInternetConnectionDescription;
+
+  /// No description provided for @unlockingNoConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection'**
+  String get unlockingNoConnection;
+
+  /// No description provided for @unlockingNoConnectionReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your internet connection and try again.'**
+  String get unlockingNoConnectionReason;
+
+  /// No description provided for @unlockingError.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get unlockingError;
+
+  /// No description provided for @unlockingErrorReason.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred. Please try again.'**
+  String get unlockingErrorReason;
+
   /// No description provided for @tapToScanNfcCard.
   ///
   /// In en, this message translates to:

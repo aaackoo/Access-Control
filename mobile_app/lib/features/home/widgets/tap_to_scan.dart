@@ -7,6 +7,7 @@ import 'package:access_control/core/nfc_device_manager.dart';
 import 'package:access_control/core/providers/supabase_database_provider.dart';
 import 'package:access_control/features/home/widgets/nfc_scanning_sheet.dart';
 import 'package:access_control/l10n/extension.dart';
+import 'package:access_control/models/unlock_result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -64,29 +65,49 @@ class TapToScan extends ConsumerWidget {
         if (!result.success) return;
 
         final db = ref.read(supabaseDatabaseProvider);
-        final unlocked = await db.unlockDevice(result.deviceId ?? '');
+        final unlockResult = await db.unlockDevice(result.deviceId ?? '');
 
         if (context.mounted) {
+          String title;
+          String? body;
+          switch (unlockResult) {
+            case UnlockResult.success:
+              title = context.l10n.unlockingSuccessful;
+              body = null;
+              break;
+            case UnlockResult.accessDenied:
+              title = context.l10n.unlockingFailed;
+              body = context.l10n.unlockingFailedReason;
+              break;
+            case UnlockResult.deviceUnreachable:
+              title = context.l10n.unlockingFailedDeviceUnreachable;
+              body = context.l10n.unlockingFailedDeviceUnreachableReason;
+              break;
+            case UnlockResult.noConnection:
+              title = context.l10n.unlockingNoConnection;
+              body = context.l10n.unlockingNoConnectionReason;
+              break;
+            case UnlockResult.error:
+              title = context.l10n.unlockingError;
+              body = context.l10n.unlockingErrorReason;
+              break;
+          }
+
           await showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
                 backgroundColor: ACColors.backgroundDimmed,
-                title: Text(
-                  unlocked
-                      ? context.l10n.unlockingSuccessful
-                      : context.l10n.unlockingFailed,
-                  style: ACTextStyles.heading(ACColors.text),
-                ),
-                content: SizedBox(
-                  width: dialogWidth,
-                  child: !unlocked
-                      ? Text(
-                          context.l10n.unlockingFailedReason,
+                title: Text(title, style: ACTextStyles.heading(ACColors.text)),
+                content: body != null
+                    ? SizedBox(
+                        width: dialogWidth,
+                        child: Text(
+                          body,
                           style: ACTextStyles.smallerBodyText(ACColors.text),
-                        )
-                      : null,
-                ),
+                        ),
+                      )
+                    : null,
                 actions: [
                   TextButton(
                     onPressed: () => context.pop(),

@@ -177,6 +177,34 @@ class AppLocalizationsEn extends AppLocalizations {
       'If you believe this is an error, please contact your administrator.';
 
   @override
+  String get unlockingFailedDeviceUnreachable => 'Device is not responding';
+
+  @override
+  String get unlockingFailedDeviceUnreachableReason =>
+      'The device could not be reached. Please check that it is powered on and connected.';
+
+  @override
+  String get noInternetConnection => 'No internet connection';
+
+  @override
+  String get noInternetConnectionDescription =>
+      'Please check your internet connection and try again.';
+
+  @override
+  String get unlockingNoConnection => 'No internet connection';
+
+  @override
+  String get unlockingNoConnectionReason =>
+      'Please check your internet connection and try again.';
+
+  @override
+  String get unlockingError => 'Something went wrong';
+
+  @override
+  String get unlockingErrorReason =>
+      'An unexpected error occurred. Please try again.';
+
+  @override
   String get tapToScanNfcCard => 'Tap to scan NFC chip';
 
   @override

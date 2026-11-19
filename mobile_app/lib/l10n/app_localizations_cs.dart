@@ -177,6 +177,34 @@ class AppLocalizationsCs extends AppLocalizations {
       'Pokud si myslíte, že se jedná o chybu, kontaktujte prosím administrátora.';
 
   @override
+  String get unlockingFailedDeviceUnreachable => 'Zařízení neodpovídá';
+
+  @override
+  String get unlockingFailedDeviceUnreachableReason =>
+      'Zařízení nebylo dostupné. Zkontrolujte, zda je zapnuté a připojené.';
+
+  @override
+  String get noInternetConnection => 'Žádné připojení k internetu';
+
+  @override
+  String get noInternetConnectionDescription =>
+      'Zkontrolujte připojení k internetu a zkuste to znovu.';
+
+  @override
+  String get unlockingNoConnection => 'Žádné připojení k internetu';
+
+  @override
+  String get unlockingNoConnectionReason =>
+      'Zkontrolujte připojení k internetu a zkuste to znovu.';
+
+  @override
+  String get unlockingError => 'Něco se pokazilo';
+
+  @override
+  String get unlockingErrorReason =>
+      'Nastala neočekávaná chyba. Zkuste to prosím znovu.';
+
+  @override
   String get tapToScanNfcCard => 'Klepnutím naskenujte čip';
 
   @override

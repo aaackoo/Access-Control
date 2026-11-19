@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:access_control/models/access_key.dart';
 import 'package:access_control/models/account.dart';
 import 'package:access_control/models/account_key_assignment.dart';
@@ -5,6 +7,7 @@ import 'package:access_control/models/area.dart';
 import 'package:access_control/models/building.dart';
 import 'package:access_control/models/company.dart';
 import 'package:access_control/models/device.dart';
+import 'package:access_control/models/unlock_result.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -704,7 +707,7 @@ class SupabaseService {
 
   // MARK: - DEVICE UNLOCK FUNCTIONALITY
 
-  Future<bool> unlockDevice(String deviceId) async {
+  Future<UnlockResult> unlockDevice(String deviceId) async {
     debugPrint('Attempting to unlock device: $deviceId');
     try {
       final response = await _client.functions.invoke(
@@ -714,18 +717,30 @@ class SupabaseService {
 
       if (response.status == 200) {
         debugPrint('Success: Door Unlocked!');
-        return true;
+        return UnlockResult.success;
+      } else if (response.status == 403) {
+        debugPrint('Access Denied: ${response.data}');
+        return UnlockResult.accessDenied;
+      } else if (response.status == 502) {
+        debugPrint('Device Unreachable: ${response.data}');
+        return UnlockResult.deviceUnreachable;
       } else {
         debugPrint('Error: ${response.data}');
-        return false;
+        return UnlockResult.error;
       }
     } on FunctionException catch (e) {
-      // Supabase-specific function errors
       debugPrint('Function Error: $e (Code: ${e.status})');
-      return false;
+      if (e.status == 403) return UnlockResult.accessDenied;
+      if (e.status == 502) return UnlockResult.deviceUnreachable;
+      if (_isConnectionError(e)) return UnlockResult.noConnection;
+      return UnlockResult.error;
     } catch (e) {
+      if (_isConnectionError(e)) {
+        debugPrint('No connection: $e');
+        return UnlockResult.noConnection;
+      }
       debugPrint('Network Error: $e');
-      return false;
+      return UnlockResult.error;
     }
   }
 
@@ -776,5 +791,15 @@ class SupabaseService {
 
   Future<void> signOut() async {
     await _client.auth.signOut();
+  }
+
+  bool _isConnectionError(Object e) {
+    if (e is SocketException) return true;
+    final msg = e.toString().toLowerCase();
+    return msg.contains('socketexception') ||
+        msg.contains('failed host lookup') ||
+        msg.contains('network is unreachable') ||
+        msg.contains('connection refused') ||
+        msg.contains('connection timed out');
   }
 }
