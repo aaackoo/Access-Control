@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:access_control/core/constants/ac_colors.dart';
 import 'package:access_control/core/constants/ac_extensions.dart';
 import 'package:access_control/core/constants/ac_text_styles.dart';
@@ -47,7 +49,9 @@ class CompanyInfoCard extends StatelessWidget {
               },
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, stack) => Text(
-                '${context.l10n.unknownError}: $error',
+                error is SocketException
+                    ? context.l10n.noInternetConnectionDescription
+                    : '${context.l10n.unknownError}: $error',
                 style: ACTextStyles.bodyText(ACColors.error),
               ),
             ),

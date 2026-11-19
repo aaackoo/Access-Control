@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:access_control/core/constants/ac_colors.dart';
 import 'package:access_control/core/constants/ac_text_styles.dart';
 import 'package:access_control/l10n/extension.dart';
@@ -24,14 +26,14 @@ class GeneralErrorState extends StatelessWidget {
           const Icon(Icons.error_outline, size: 64, color: Colors.red),
           const SizedBox(height: 16),
           Text(
-            customTitle ?? context.l10n.error,
+            customTitle ?? (error is SocketException ? context.l10n.noInternetConnection : context.l10n.error),
             style: ACTextStyles.bodyText(
               ACColors.text,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            error.toString(),
+            error is SocketException ? context.l10n.noInternetConnectionDescription : error.toString(),
             style: ACTextStyles.smallerBodyText(
               ACColors.error,
             ),
