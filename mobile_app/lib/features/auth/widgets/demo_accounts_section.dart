@@ -3,6 +3,7 @@ import 'package:access_control/core/constants/ac_text_styles.dart';
 import 'package:access_control/features/auth/widgets/demo_accounts_button.dart';
 import 'package:access_control/l10n/extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DemoAccountsSection extends StatelessWidget {
   const DemoAccountsSection({
@@ -16,11 +17,26 @@ class DemoAccountsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Demo credentials come from the local .env file and are never committed.
+    final demoPassword = dotenv.get('DEMO_PASSWORD', fallback: '');
     final demoAccounts = [
-      {'email': 'a.supej@icloud.com', 'role': context.l10n.companyOwner},
-      {'email': 'TBA', 'role': context.l10n.manager},
-      {'email': 'TBA', 'role': context.l10n.user},
-    ];
+      {
+        'email': dotenv.get('DEMO_OWNER_EMAIL', fallback: ''),
+        'role': context.l10n.companyOwner,
+      },
+      {
+        'email': dotenv.get('DEMO_MANAGER_EMAIL', fallback: ''),
+        'role': context.l10n.manager,
+      },
+      {
+        'email': dotenv.get('DEMO_USER_EMAIL', fallback: ''),
+        'role': context.l10n.user,
+      },
+    ].where((account) => account['email']!.isNotEmpty).toList();
+
+    if (demoPassword.isEmpty || demoAccounts.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -60,7 +76,7 @@ class DemoAccountsSection extends StatelessWidget {
                   ),
                   child: DemoAccountButton(
                     email: account['email'] as String,
-                    password: 'abcdef',
+                    password: demoPassword,
                     role: account['role'] as String,
                     emailController: emailController,
                     passwordController: passwordController,

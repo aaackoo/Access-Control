@@ -41,7 +41,7 @@ flowchart LR
 | --- | --- |
 | `unlock-device` | Permission check and unlock/deny command to the device |
 | `create-iot-device` | Creates a device in the database and registers it in Azure IoT Hub |
-| `bulk-create-iot-device` | Creates many devices at once and rolls back the ones that fail to register in IoT Hub |
+| `bulk-create-iot-devices` | Creates many devices at once and rolls back the ones that fail to register in IoT Hub |
 | `create-new-account` | Lets an owner create a user account in their company |
 
 **Firmware** (`esp32_IoT/`). An Arduino sketch for the ESP32. It connects to Wi-Fi, then to Azure IoT Hub over MQTT (port 8883) with a SAS token, and listens for direct methods. The prototype signals the result with the LED and does not drive a physical lock.
@@ -61,8 +61,8 @@ flowchart LR
 The repository does not contain any credentials, so you need your own Supabase project, Azure IoT Hub and hardware.
 
 - **Database:** create the schema from `supabase/supabase_dump.sql`.
-- **Edge Functions:** deploy the files in `supabase/functions/`. The deployed names must match the names the app calls in `mobile_app/lib/core/services/supabase_service.dart`. Set `AZURE_CONNECTION_STRING` (an IoT Hub shared access policy connection string) as a function secret. Supabase provides `SUPABASE_URL`, `SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` automatically.
-- **App:** copy `mobile_app/.env.example` to `mobile_app/.env` and set `SUPABASE_URL`, `SUPABASE_ANON`, `USE_CLOUDFLARE` and, if you use the worker, `CLOUDFLARE_WORKER_URL`. Run it with `flutter run --flavor dev -t lib/main_dev.dart`, or use the `prod` flavor and `lib/main_prod.dart`.
+- **Edge Functions:** deploy each file in `supabase/functions/` as a function with the same name. Set `AZURE_CONNECTION_STRING` (an IoT Hub shared access policy connection string) as a function secret. Supabase provides `SUPABASE_URL`, `SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` automatically.
+- **App:** copy `mobile_app/.env.example` to `mobile_app/.env` and set `SUPABASE_URL`, `SUPABASE_ANON`, `USE_CLOUDFLARE` and, if you use the worker, `CLOUDFLARE_WORKER_URL`. The optional `DEMO_*` values fill the demo accounts section on the login screen of the `dev` flavor. Run it with `flutter run --flavor dev -t lib/main_dev.dart`, or use the `prod` flavor and `lib/main_prod.dart`.
 - **iOS:** the flavor xcconfig files in `mobile_app/ios/Flutter/` only set display names and the asset prefix. To run on a device, set your own signing team and bundle identifiers in Xcode. The team must be allowed to use the NFC Tag Reading capability.
 - **ESP32:** copy `esp32_IoT/secrets.h.example` to `esp32_IoT/secrets.h`. Fill in the Wi-Fi credentials, the IoT Hub hostname, the device ID (the device's UUID from the database) and a device SAS token. The sketch needs the PubSubClient, Adafruit NeoPixel and SparkFun ST25DV64KC libraries.
 - **Cloudflare Worker:** replace `supabase_url_placeholder` in `worker.js` with your Supabase URL.
@@ -73,5 +73,5 @@ This is a working prototype built for the thesis. It is not production software,
 
 - The row level security policies give every authenticated user full access to all tables. A real deployment would need per-company and per-role policies.
 - The ESP32 does not verify the IoT Hub TLS certificate.
-- The login screen has a demo accounts section for testing. These accounts use a shared development password that is in the source code. It must not be used in any real deployment.
+- The `dev` flavor has a demo accounts section on the login screen for testing. The demo accounts share one development password, which is read from the local `.env` file and is not in the repository. Demo accounts and that password must not be used in any real deployment.
 - Accounts created in the app get a random password. The app has no password reset screen, so new users need a password reset email or an administrator to set their password.
