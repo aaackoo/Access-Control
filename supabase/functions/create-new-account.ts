@@ -37,7 +37,7 @@ serve(async (req) => {
 
     if (roleError || !callerAccount) throw new Error('Caller account not found')
 
-    const allowedRoles = ['owner', 'area_manager', 'building_manager']
+    const allowedRoles = ['owner']
     if (!allowedRoles.includes(callerAccount.role)) {
       return new Response(
         JSON.stringify({ error: `Unauthorized. Role '${callerAccount.role}' cannot create users.` }),
