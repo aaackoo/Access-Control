@@ -50,46 +50,48 @@ class _AddAreaModalState extends ConsumerState<AddAreaModal> {
         width: dialogWidth,
         child: Form(
           key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GeneralInputField(
-                controller: _nameController,
-                icon: Icons.location_city_outlined,
-                label: context.l10n.areaName,
-                hintText: context.l10n.enterAreaName,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return context.l10n.areaNameRequired;
-                  }
-                  if (value.trim().length < 2) {
-                    return context.l10n.areaNameTooShort;
-                  }
-                  return null;
-                },
-                autoFocus: true,
-              ),
-              const SizedBox(height: 16),
-              GeneralInputField(
-                controller: _locationController,
-                icon: Icons.place,
-                label: context.l10n.location,
-                hintText: context.l10n.enterLocation,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return context.l10n.locationRequired;
-                  }
-                  if (value.trim().length < 2) {
-                    return context.l10n.locationTooShort;
-                  }
-                  return null;
-                },
-                onSubmit: _handleSubmit,
-              ),
-              const SizedBox(height: 16),
-              if (_isLoading) LoadingRow(text: context.l10n.addingArea),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GeneralInputField(
+                  controller: _nameController,
+                  icon: Icons.location_city_outlined,
+                  label: context.l10n.areaName,
+                  hintText: context.l10n.enterAreaName,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return context.l10n.areaNameRequired;
+                    }
+                    if (value.trim().length < 2) {
+                      return context.l10n.areaNameTooShort;
+                    }
+                    return null;
+                  },
+                  autoFocus: true,
+                ),
+                const SizedBox(height: 16),
+                GeneralInputField(
+                  controller: _locationController,
+                  icon: Icons.place,
+                  label: context.l10n.location,
+                  hintText: context.l10n.enterLocation,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return context.l10n.locationRequired;
+                    }
+                    if (value.trim().length < 2) {
+                      return context.l10n.locationTooShort;
+                    }
+                    return null;
+                  },
+                  onSubmit: _handleSubmit,
+                ),
+                const SizedBox(height: 16),
+                if (_isLoading) LoadingRow(text: context.l10n.addingArea),
+              ],
+            ),
           ),
         ),
       ),

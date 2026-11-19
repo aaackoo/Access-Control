@@ -50,32 +50,34 @@ class _EditCompanyModalState extends ConsumerState<EditCompanyModal> {
         width: dialogWidth,
         child: Form(
           key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GeneralInputField(
-                controller: _nameController,
-                icon: Icons.business_outlined,
-                label: context.l10n.companyName,
-                hintText: context.l10n.enterCompanyName,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return context.l10n.companyNameRequired;
-                  }
-                  if (value.trim().length < 2) {
-                    return context.l10n.companyNameTooShort;
-                  }
-                  return null;
-                },
-                autoFocus: true,
-                onSubmit: _handleSubmit,
-              ),
-              const SizedBox(height: 16),
-              CompanyInfoBanner(company: widget.company),
-              const SizedBox(height: 16),
-              if (_isLoading) LoadingRow(text: context.l10n.editingCompany),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GeneralInputField(
+                  controller: _nameController,
+                  icon: Icons.business_outlined,
+                  label: context.l10n.companyName,
+                  hintText: context.l10n.enterCompanyName,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return context.l10n.companyNameRequired;
+                    }
+                    if (value.trim().length < 2) {
+                      return context.l10n.companyNameTooShort;
+                    }
+                    return null;
+                  },
+                  autoFocus: true,
+                  onSubmit: _handleSubmit,
+                ),
+                const SizedBox(height: 16),
+                CompanyInfoBanner(company: widget.company),
+                const SizedBox(height: 16),
+                if (_isLoading) LoadingRow(text: context.l10n.editingCompany),
+              ],
+            ),
           ),
         ),
       ),

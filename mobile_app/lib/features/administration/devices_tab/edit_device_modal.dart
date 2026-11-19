@@ -52,40 +52,42 @@ class _EditDeviceModalState extends ConsumerState<EditDeviceModal> {
         width: dialogWidth,
         child: Form(
           key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GeneralInputField(
-                controller: _nameController,
-                icon: Icons.apartment,
-                label: context.l10n.deviceName,
-                hintText: context.l10n.enterDeviceName,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return context.l10n.deviceNameRequired;
-                  }
-                  if (value.trim().length < 2) {
-                    return context.l10n.deviceNameTooShort;
-                  }
-                  return null;
-                },
-                autoFocus: true,
-              ),
-              const SizedBox(height: 16),
-              DeviceTypeSelector(
-                selectedDeviceType: _selectedDeviceType,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedDeviceType = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-              DeviceInfoBanner(device: widget.device),
-              const SizedBox(height: 16),
-              if (_isLoading) LoadingRow(text: context.l10n.editingDevice),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GeneralInputField(
+                  controller: _nameController,
+                  icon: Icons.apartment,
+                  label: context.l10n.deviceName,
+                  hintText: context.l10n.enterDeviceName,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return context.l10n.deviceNameRequired;
+                    }
+                    if (value.trim().length < 2) {
+                      return context.l10n.deviceNameTooShort;
+                    }
+                    return null;
+                  },
+                  autoFocus: true,
+                ),
+                const SizedBox(height: 16),
+                DeviceTypeSelector(
+                  selectedDeviceType: _selectedDeviceType,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedDeviceType = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 16),
+                DeviceInfoBanner(device: widget.device),
+                const SizedBox(height: 16),
+                if (_isLoading) LoadingRow(text: context.l10n.editingDevice),
+              ],
+            ),
           ),
         ),
       ),

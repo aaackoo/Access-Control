@@ -62,121 +62,123 @@ class _AddDeviceModalState extends ConsumerState<AddDeviceModal> {
         width: dialogWidth,
         child: Form(
           key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    context.l10n.addMultipleDevices,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      context.l10n.addMultipleDevices,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  Switch(
-                    value: _mode == _CreationMode.bulk,
-                    onChanged: (value) {
-                      setState(() {
-                        _mode =
-                            value ? _CreationMode.bulk : _CreationMode.single;
-                      });
-                    },
-                    activeTrackColor: ACColors.primary.withValues(alpha: 0.5),
-                    thumbColor: WidgetStateProperty.resolveWith((states) {
-                      if (states.contains(WidgetState.selected)) {
-                        return ACColors.primary;
+                    Switch(
+                      value: _mode == _CreationMode.bulk,
+                      onChanged: (value) {
+                        setState(() {
+                          _mode =
+                              value ? _CreationMode.bulk : _CreationMode.single;
+                        });
+                      },
+                      activeTrackColor: ACColors.primary.withValues(alpha: 0.5),
+                      thumbColor: WidgetStateProperty.resolveWith((states) {
+                        if (states.contains(WidgetState.selected)) {
+                          return ACColors.primary;
+                        }
+                        return null;
+                      }),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                GeneralInputField(
+                  controller: _nameController,
+                  icon: Icons.devices_fold_outlined,
+                  label: _mode == _CreationMode.single
+                      ? context.l10n.deviceName
+                      : context.l10n.prefix,
+                  hintText: _mode == _CreationMode.single
+                      ? context.l10n.enterDeviceName
+                      : context.l10n.enterMultipleDevicesPrefix,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return _mode == _CreationMode.single
+                          ? context.l10n.deviceNameRequired
+                          : context.l10n.multipleDevicesPrefixRequired;
+                    }
+                    if (value.trim().length < 2) {
+                      return context.l10n.deviceNameTooShort;
+                    }
+                    return null;
+                  },
+                  autoFocus: true,
+                ),
+                if (_mode == _CreationMode.bulk) ...[
+                  const SizedBox(height: 16),
+                  GeneralInputField(
+                    controller: _countController,
+                    icon: Icons.numbers,
+                    label: context.l10n.deviceCount,
+                    hintText: context.l10n.enterDeviceCount,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return context.l10n.deviceCountRequired;
+                      }
+                      final count = int.tryParse(value);
+                      if (count == null || count < 1) {
+                        return context.l10n.deviceCountMustBePositive;
+                      }
+                      if (count > 100) {
+                        return context.l10n.deviceCountMax100;
                       }
                       return null;
-                    }),
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  GeneralInputField(
+                    controller: _padLengthController,
+                    icon: Icons.format_list_numbered,
+                    label: context.l10n.indexingLength,
+                    hintText: context.l10n.indexingLengthHint,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return context.l10n.indexingLengthRequired;
+                      }
+                      final padLength = int.tryParse(value);
+                      if (padLength == null || padLength < 1 || padLength > 5) {
+                        return context.l10n.indexingLengthMustBeBetween1And5;
+                      }
+                      return null;
+                    },
                   ),
                 ],
-              ),
-              const SizedBox(height: 16),
-              GeneralInputField(
-                controller: _nameController,
-                icon: Icons.devices_fold_outlined,
-                label: _mode == _CreationMode.single
-                    ? context.l10n.deviceName
-                    : context.l10n.prefix,
-                hintText: _mode == _CreationMode.single
-                    ? context.l10n.enterDeviceName
-                    : context.l10n.enterMultipleDevicesPrefix,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return _mode == _CreationMode.single
-                        ? context.l10n.deviceNameRequired
-                        : context.l10n.multipleDevicesPrefixRequired;
-                  }
-                  if (value.trim().length < 2) {
-                    return context.l10n.deviceNameTooShort;
-                  }
-                  return null;
-                },
-                autoFocus: true,
-              ),
-              if (_mode == _CreationMode.bulk) ...[
                 const SizedBox(height: 16),
-                GeneralInputField(
-                  controller: _countController,
-                  icon: Icons.numbers,
-                  label: context.l10n.deviceCount,
-                  hintText: context.l10n.enterDeviceCount,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return context.l10n.deviceCountRequired;
-                    }
-                    final count = int.tryParse(value);
-                    if (count == null || count < 1) {
-                      return context.l10n.deviceCountMustBePositive;
-                    }
-                    if (count > 100) {
-                      return context.l10n.deviceCountMax100;
-                    }
-                    return null;
+                DeviceTypeSelector(
+                  selectedDeviceType: _selectedDeviceType,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedDeviceType = value;
+                    });
                   },
                 ),
                 const SizedBox(height: 16),
-                GeneralInputField(
-                  controller: _padLengthController,
-                  icon: Icons.format_list_numbered,
-                  label: context.l10n.indexingLength,
-                  hintText: context.l10n.indexingLengthHint,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return context.l10n.indexingLengthRequired;
-                    }
-                    final padLength = int.tryParse(value);
-                    if (padLength == null || padLength < 1 || padLength > 5) {
-                      return context.l10n.indexingLengthMustBeBetween1And5;
-                    }
-                    return null;
-                  },
-                ),
+                if (_isLoading)
+                  LoadingRow(
+                    text: _mode == _CreationMode.single
+                        ? context.l10n.addingDevice
+                        : context.l10n.addingMultipleDevices,
+                  ),
               ],
-              const SizedBox(height: 16),
-              DeviceTypeSelector(
-                selectedDeviceType: _selectedDeviceType,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedDeviceType = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-              if (_isLoading)
-                LoadingRow(
-                  text: _mode == _CreationMode.single
-                      ? context.l10n.addingDevice
-                      : context.l10n.addingMultipleDevices,
-                ),
-            ],
+            ),
           ),
         ),
       ),

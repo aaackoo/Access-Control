@@ -52,50 +52,52 @@ class _EditBuildingModalState extends ConsumerState<EditBuildingModal> {
         width: dialogWidth,
         child: Form(
           key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GeneralInputField(
-                controller: _nameController,
-                icon: Icons.apartment,
-                label: context.l10n.buildingName,
-                hintText: context.l10n.enterBuildingName,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return context.l10n.buildingNameRequired;
-                  }
-                  if (value.trim().length < 2) {
-                    return context.l10n.buildingNameTooShort;
-                  }
-                  return null;
-                },
-                autoFocus: true,
-              ),
-              const SizedBox(height: 16),
-              GeneralInputField(
-                controller: _addressController,
-                icon: Icons.location_on_outlined,
-                label: context.l10n.address,
-                hintText: context.l10n.enterAddress,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return context.l10n.addressRequired;
-                  }
-                  if (value.trim().length < 5) {
-                    return context.l10n.addressTooShort;
-                  }
-                  return null;
-                },
-                onSubmit: _handleSubmit,
-                minLines: 1,
-                maxLines: 2,
-              ),
-              const SizedBox(height: 16),
-              BuildingInfoBanner(building: widget.building),
-              const SizedBox(height: 16),
-              if (_isLoading) LoadingRow(text: context.l10n.editingBuilding),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GeneralInputField(
+                  controller: _nameController,
+                  icon: Icons.apartment,
+                  label: context.l10n.buildingName,
+                  hintText: context.l10n.enterBuildingName,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return context.l10n.buildingNameRequired;
+                    }
+                    if (value.trim().length < 2) {
+                      return context.l10n.buildingNameTooShort;
+                    }
+                    return null;
+                  },
+                  autoFocus: true,
+                ),
+                const SizedBox(height: 16),
+                GeneralInputField(
+                  controller: _addressController,
+                  icon: Icons.location_on_outlined,
+                  label: context.l10n.address,
+                  hintText: context.l10n.enterAddress,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return context.l10n.addressRequired;
+                    }
+                    if (value.trim().length < 5) {
+                      return context.l10n.addressTooShort;
+                    }
+                    return null;
+                  },
+                  onSubmit: _handleSubmit,
+                  minLines: 1,
+                  maxLines: 2,
+                ),
+                const SizedBox(height: 16),
+                BuildingInfoBanner(building: widget.building),
+                const SizedBox(height: 16),
+                if (_isLoading) LoadingRow(text: context.l10n.editingBuilding),
+              ],
+            ),
           ),
         ),
       ),
